@@ -6,9 +6,27 @@ const resultsModal = new bootstrap.Modal(document.getElementById("resultsModal")
 document.getElementById("status").addEventListener("click", e => getStatus(e)); // GET request
 document.getElementById("submit").addEventListener("click", e => postForm(e)); // POST request
 
+function processOptions(form) {
+    let optArray = [];
+    for (let entry of form.entries) {
+        if (entry[0] === "options") {
+            optArray.push(entry[1]);
+        }
+    }
+    form.delete("options");
+    form.append("options", optArray.join());
+    return form;
+}
+
 //Async functions
 async function postForm(e) {
-    const form = new FormData(document.getElementById("checksform"));
+    const form = processOptions(new FormData(document.getElementById("checksform")));
+    
+    /* Test code - to see if the functions work
+    for (let entry of form.entries()) {
+        console.log(entry)
+    } */
+
     const response = await fetch(API_URL, {
                                 method: "POST",
                                 headers: {
